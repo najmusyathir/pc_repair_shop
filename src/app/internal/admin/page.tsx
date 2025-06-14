@@ -1,53 +1,68 @@
+"use client";
+
 import StatusBadge from "@/components/StatusBadge";
 
+import { useEffect, useState } from "react";
+import { fetchRepairs } from "@/lib/endpointRepair";
+import { Repair } from "@/pages/api/repairs";
+
 export default function Dashboard() {
-  const repairs = [
-    {
-      id: 1,
-      customer: "Ali Rahman",
-      device: "Laptop",
-      issue: "No power",
-      status: "Ongoing",
-      technician: "Tech#001",
-    },
-    {
-      id: 2,
-      customer: "Mira Tan",
-      device: "Desktop",
-      issue: "GPU not detected",
-      status: "Pending",
-      technician: "Tech#004",
-    },
-    {
-      id: 3,
-      customer: "John Lee",
-      device: "MacBook",
-      issue: "Screen cracked",
-      status: "Completed",
-      technician: "Tech#003",
-    },
-    {
-      id: 4,
-      customer: "Nina Aziz",
-      device: "PC",
-      issue: "No display",
-      status: "Failed",
-      technician: "Tech#002",
-    },
-    {
-      id: 5,
-      customer: "Tom Yeo",
-      device: "Notebook",
-      issue: "HDD error",
-      status: "Repairing",
-      technician: "Tech#005",
-    },
-  ];
+  // const repairs = [
+  //   {
+  //     id: 1,
+  //     customer: "Ali Rahman",
+  //     device: "Laptop",
+  //     issue: "No power",
+  //     status: "Ongoing",
+  //     technician: "Tech#001",
+  //   },
+  //   {
+  //     id: 2,
+  //     customer: "Mira Tan",
+  //     device: "Desktop",
+  //     issue: "GPU not detected",
+  //     status: "Pending",
+  //     technician: "Tech#004",
+  //   },
+  //   {
+  //     id: 3,
+  //     customer: "John Lee",
+  //     device: "MacBook",
+  //     issue: "Screen cracked",
+  //     status: "Completed",
+  //     technician: "Tech#003",
+  //   },
+  //   {
+  //     id: 4,
+  //     customer: "Nina Aziz",
+  //     device: "PC",
+  //     issue: "No display",
+  //     status: "Failed",
+  //     technician: "Tech#002",
+  //   },
+  //   {
+  //     id: 5,
+  //     customer: "Tom Yeo",
+  //     device: "Notebook",
+  //     issue: "HDD error",
+  //     status: "Repairing",
+  //     technician: "Tech#005",
+  //   },
+  // ];
+
+  const [repairs, setRepairs] = useState<Repair[]>([]);
+
+  useEffect(() => {
+    fetchRepairs().then(setRepairs).catch(console.error);
+  }, []);
+
   return (
     <main className="min-h-screen bg-gray-100 text-gray-200">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <header className="mb-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Admin</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Dashboard Admin
+          </h1>
           <p className="text-gray-600">
             Welcome back! Here{"'"}s a snapshot of the current system status.
           </p>
@@ -58,21 +73,38 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold text-gray-700 mb-1">
               Active Repairs
             </h2>
-            <p className="text-3xl font-bold text-blue-600">14</p>
+            <p className="text-3xl font-bold text-blue-600">
+              {
+                repairs.filter(
+                  (repair) => repair.status.toLowerCase() === "active"
+                ).length
+              }
+            </p>
           </div>
 
           <div className="bg-white rounded-2xl shadow p-6">
             <h2 className="text-xl font-semibold text-gray-700 mb-1">
               Pending Invoices
             </h2>
-            <p className="text-3xl font-bold text-yellow-500">6</p>
+            <p className="text-3xl font-bold text-blue-600">
+              {
+                repairs.filter(
+                  (repair) => repair.status.toLowerCase() === "pending"
+                ).length
+              }
+            </p>
           </div>
 
           <div className="bg-white rounded-2xl shadow p-6">
             <h2 className="text-xl font-semibold text-gray-700 mb-1">
               Completed Repairs
             </h2>
-            <p className="text-3xl font-bold text-green-600">122</p>
+            <p className="text-3xl font-bold text-blue-600">
+              {
+                repairs.filter((repair) => repair.status.toLowerCase() === "completed")
+                  .length
+              }
+            </p>
           </div>
         </section>
 
@@ -96,15 +128,16 @@ export default function Dashboard() {
                 {repairs.map((repair) => (
                   <tr
                     key={repair.id}
-                    className="border-b border-gray-300 hover:bg-gray-200">
+                    className="border-b border-gray-300 hover:bg-gray-200"
+                  >
                     <td className="py-3 px-4">{repair.id}</td>
-                    <td className="pr-4">{repair.customer}</td>
-                    <td className="pr-4">{repair.device}</td>
-                    <td className="pr-4">{repair.issue}</td>
+                    <td className="pr-4">{repair.cust_name}</td>
+                    <td className="pr-4">{repair.device_name}</td>
+                    <td className="pr-4">{repair.description}</td>
                     <td className="pr-4 py-4">
                       <StatusBadge status={repair.status} />
                     </td>
-                    <td>{repair.technician}</td>
+                    <td>{repair.technician_id}</td>
                   </tr>
                 ))}
               </tbody>

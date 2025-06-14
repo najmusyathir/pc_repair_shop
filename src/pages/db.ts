@@ -1,7 +1,5 @@
-// lib/db.ts
 import { Pool } from 'pg';
 
-// Create and export a single instance (connection pool)
 const pool = new Pool({
   user: process.env.PGUSER,
   host: process.env.PGHOST,

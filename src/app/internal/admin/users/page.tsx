@@ -1,45 +1,56 @@
-import Breadcrumbs from "@/components/Breadcrumbs";
+"use client";
+
+import { useEffect, useState } from "react";
 import ButtonPri from "@/components/ButtonPri";
 import Link from "next/link";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { fetchUsers } from "@/lib/endpointUser";
+import { User } from "@/pages/api/users";
 
 export default function UsersPage() {
-  const users = [
-    {
-      id: 1,
-      username: "Admin",
-      email: "admin@gmail.com",
-      password: "admin123",
-      role: "admin",
-    },
-    {
-      id: 2,
-      username: "Mira Tan",
-      email: "mira@gmail.com",
-      password: "mira123",
-      role: "technician",
-    },
-    {
-      id: 3,
-      username: "John Lee",
-      email: "john@gmail.com",
-      password: "john123",
-      role: "technician",
-    },
-    {
-      id: 4,
-      username: "Nina Aziz",
-      email: "nina@gmail.com",
-      password: "nina123",
-      role: "technician",
-    },
-    {
-      id: 5,
-      username: "Tom Yeo",
-      email: "tom@gmail.com",
-      password: "tom123",
-      role: "technician",
-    },
-  ];
+  // const users = [
+  //   {
+  //     id: 1,
+  //     username: "Admin",
+  //     email: "admin@gmail.com",
+  //     password: "admin123",
+  //     role: "admin",
+  //   },
+  //   {
+  //     id: 2,
+  //     username: "Mira Tan",
+  //     email: "mira@gmail.com",
+  //     password: "mira123",
+  //     role: "technician",
+  //   },
+  //   {
+  //     id: 3,
+  //     username: "John Lee",
+  //     email: "john@gmail.com",
+  //     password: "john123",
+  //     role: "technician",
+  //   },
+  //   {
+  //     id: 4,
+  //     username: "Nina Aziz",
+  //     email: "nina@gmail.com",
+  //     password: "nina123",
+  //     role: "technician",
+  //   },
+  //   {
+  //     id: 5,
+  //     username: "Tom Yeo",
+  //     email: "tom@gmail.com",
+  //     password: "tom123",
+  //     role: "technician",
+  //   },
+  // ];
+
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    fetchUsers().then(setUsers).catch(console.error);
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
@@ -48,7 +59,7 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Users</h1>
           <p className="text-gray-600">Manage and view all user account.</p>
         </header>
-        
+
         <Breadcrumbs />
         <section className="bg-gray-100 rounded-2xl shadow border border-slate-200 p-6 flex flex-col gap-3">
           <div className="flex gap-6 items-center">
@@ -74,7 +85,8 @@ export default function UsersPage() {
                 {users.map((user) => (
                   <tr
                     key={user.id}
-                    className="border-b border-gray-300 hover:bg-gray-200">
+                    className="border-b border-gray-300 hover:bg-gray-200"
+                  >
                     <td className="py-3 px-4">{user.id}</td>
                     <td className="pr-4">{user.username}</td>
                     <td className="pr-4">{user.email}</td>
