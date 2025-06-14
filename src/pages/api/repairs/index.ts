@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createNewRepair, getAllRepairs } from '@/lib/controller/repairsController';
+import { createNewRepair, getAllRepairs, getRepairsByPhone } from '@/lib/controller/repairsController';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method === "GET") {
+      const { cust_phone } = req.query;
+
+      if (cust_phone && typeof cust_phone === "string") {
+        const records = await getRepairsByPhone(cust_phone);
+        return res.status(200).json(records);
+      }
+
       const repairs = await getAllRepairs();
       return res.status(200).json(repairs);
     }
