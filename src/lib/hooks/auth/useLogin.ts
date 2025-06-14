@@ -1,4 +1,3 @@
-// src/hooks/useLogin.ts
 "use client";
 
 import { useState } from "react";
@@ -29,10 +28,8 @@ export const useLogin = () => {
         throw new Error(err.message || "Login failed");
       }
 
-      const user = await res.json();
-      sessionStorage.setItem("u_id", user.id);
-      sessionStorage.setItem("u_role", user.role);
-      router.push(`/internal/${sessionStorage.getItem('u_role')}`);
+      const { role } = await res.json();
+      router.push(`/internal/${role}`);
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("An unexpected error occurred");
