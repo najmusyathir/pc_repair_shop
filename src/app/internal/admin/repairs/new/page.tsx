@@ -1,59 +1,15 @@
+/* eslint-disable react/no-unescaped-entities */
+// src/app/internal/admin/repairs/new/page.tsx
 "use client";
 
-import { useState } from "react";
 import Input from "@/components/Input";
 import Textarea from "@/components/Textarea";
 import Select from "@/components/Select";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useRouter } from "next/navigation";
+import { useRepairForm } from "../../hooks/useRepairForm";
 
 export default function NewReportForm() {
-  const [form, setForm] = useState({
-    device_name: "",
-    cust_name: "",
-    cust_phone: "",
-    technician_id: "",
-    description: "",
-    request_date: "",
-    return_date: "",
-    status: "Pending",
-  });
-
-  const router = useRouter();
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("/api/repairs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error("Error:", errorData.error);
-        alert("Submission failed: " + errorData.error);
-        return;
-      }
-
-      const data = await res.json();
-      alert("Report submitted! ID: " + data.id);
-      router.push("/internal/admin/repairs");
-    } catch (err) {
-      console.error("Submit error:", err);
-      alert("Unexpected error occurred");
-    }
-  };
+  const { form, handleChange, handleSubmit } = useRepairForm();
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
@@ -62,9 +18,7 @@ export default function NewReportForm() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Create New Report
           </h1>
-          <p className="text-gray-600">
-            Insert new customer{"'"}s repair request.
-          </p>
+          <p className="text-gray-600">Insert new customer's repair request.</p>
         </header>
 
         <Breadcrumbs />
@@ -72,7 +26,6 @@ export default function NewReportForm() {
           onSubmit={handleSubmit}
           className="bg-white p-6 max-w-3xl rounded-xl shadow grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          {/* Left Column */}
           <Input
             label="Device Name"
             name="device_name"
@@ -100,7 +53,6 @@ export default function NewReportForm() {
             value={form.technician_id}
             onChange={handleChange}
           />
-
           <Input
             label="Request Date"
             name="request_date"
@@ -130,8 +82,6 @@ export default function NewReportForm() {
               "Canceled",
             ]}
           />
-
-          {/* Full width textarea spans 2 columns */}
           <div className="md:col-span-2">
             <Textarea
               label="Description"
@@ -141,8 +91,6 @@ export default function NewReportForm() {
               required
             />
           </div>
-
-          {/* Submit button spans 2 columns and aligns right */}
           <div className="md:col-span-2 flex justify-end">
             <button
               type="submit"

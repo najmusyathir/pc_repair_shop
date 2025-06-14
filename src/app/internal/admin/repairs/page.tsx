@@ -1,63 +1,13 @@
-// pages/internal/admin/repairs/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
 import StatusBadge from "@/components/StatusBadge";
 import ButtonPri from "@/components/ButtonPri";
-import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { fetchRepairs } from "@/lib/endpointRepair";
-import { Repair } from "@/pages/api/repairs";
+import { useRepairs } from "../hooks/useRepair";
 
 export default function RepairsPage() {
-  // const repairs = [
-  //   {
-  //     id: 1,
-  //     customer: "Ali Rahman",
-  //     device: "Laptop",
-  //     issue: "No power",
-  //     status: "Ongoing",
-  //     technician: "Tech#001",
-  //   },
-  //   {
-  //     id: 2,
-  //     customer: "Mira Tan",
-  //     device: "Desktop",
-  //     issue: "GPU not detected",
-  //     status: "Pending",
-  //     technician: "Tech#004",
-  //   },
-  //   {
-  //     id: 3,
-  //     customer: "John Lee",
-  //     device: "MacBook",
-  //     issue: "Screen cracked",
-  //     status: "Completed",
-  //     technician: "Tech#003",
-  //   },
-  //   {
-  //     id: 4,
-  //     customer: "Nina Aziz",
-  //     device: "PC",
-  //     issue: "No display",
-  //     status: "Failed",
-  //     technician: "Tech#002",
-  //   },
-  //   {
-  //     id: 5,
-  //     customer: "Tom Yeo",
-  //     device: "Notebook",
-  //     issue: "HDD error",
-  //     status: "Repairing",
-  //     technician: "Tech#005",
-  //   },
-  // ];
-
-  const [repairs, setRepairs] = useState<Repair[]>([]);
-
-  useEffect(() => {
-    fetchRepairs().then(setRepairs).catch(console.error);
-  }, []);
+  const { repairs, handleDelete } = useRepairs();
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
@@ -104,11 +54,17 @@ export default function RepairsPage() {
                     </td>
                     <td>{repair.technician_id}</td>
                     <td className="py-2">
-                      <ButtonPri>
+                      <div className="flex gap-2">
                         <Link href={`/internal/admin/repairs/${repair.id}`}>
-                          Edit
+                          <ButtonPri>Edit</ButtonPri>
                         </Link>
-                      </ButtonPri>
+                        <ButtonPri
+                          onClick={() => handleDelete(repair.id)}
+                          className="bg-red-600 hover:bg-red-700 text-white"
+                        >
+                          Delete
+                        </ButtonPri>
+                      </div>
                     </td>
                   </tr>
                 ))}

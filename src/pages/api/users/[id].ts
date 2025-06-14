@@ -1,51 +1,37 @@
-// pages/api/users/[id].ts
-import pool from '@/pages/db';
-import type { NextApiRequest, NextApiResponse } from 'next';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { deleteUserById, getUserById, updateUserById } from "@/lib/controller/usersController";
+import type { NextApiRequest, NextApiResponse } from "next";
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
   if (!id || Array.isArray(id)) {
-    return res.status(400).json({ error: 'Invalid user ID' });
+    return res.status(400).json({ error: "Invalid user ID" });
   }
 
-  switch (req.method) {
-    case 'GET':
-      try {
-        const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-        if (result.rows.length === 0) {
-          return res.status(404).json({ error: 'User not found' });
-        }
-        return res.status(200).json(result.rows[0]);
-      } catch (err) {
-        console.error('Error fetching user:', err);
-        return res.status(500).json({ error: 'Internal server error' });
+  try {
+    if (req.method === "GET") {
+      const user = await getUserById(id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
       }
+      return res.status(200).json(user);
+    }
 
-    case 'PUT':
-      const { name, email, role } = req.body;
-      try {
-        await pool.query(
-          'UPDATE users SET name = $1, email = $2, role = $3 WHERE id = $4',
-          [name, email, role, id]
-        );
-        return res.status(200).json({ message: 'User updated' });
-      } catch (err) {
-        console.error('Error updating user:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
+    if (req.method === "PUT") {
+      await updateUserById(id, req.body);
+      return res.status(200).json({ message: "User updated successfully" });
+    }
 
-    case 'DELETE':
-      try {
-        await pool.query('DELETE FROM users WHERE id = $1', [id]);
-        return res.status(200).json({ message: 'User deleted' });
-      } catch (err) {
-        console.error('Error deleting user:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
+    if (req.method === "DELETE") {
+      await deleteUserById(id);
+      return res.status(200).json({ message: "User deleted successfully" });
+    }
 
-    default:
-      res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
-      return res.status(405).end(`Method ${req.method} not allowed`);
+    return res.status(405).json({ error: "Method not allowed" });
+  } catch (error: any) {
+    console.error("Error in /api/users/[id]:", error);
+    return res.status(500).json({ error: error.message || "Internal server error" });
   }
 }

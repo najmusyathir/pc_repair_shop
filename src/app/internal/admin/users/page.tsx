@@ -1,56 +1,13 @@
+// pages/internal/admin/users/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import ButtonPri from "@/components/ButtonPri";
 import Link from "next/link";
+import ButtonPri from "@/components/ButtonPri";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { fetchUsers } from "@/lib/endpointUser";
-import { User } from "@/pages/api/users";
+import { useUsers } from "../hooks/useUsers";
 
 export default function UsersPage() {
-  // const users = [
-  //   {
-  //     id: 1,
-  //     username: "Admin",
-  //     email: "admin@gmail.com",
-  //     password: "admin123",
-  //     role: "admin",
-  //   },
-  //   {
-  //     id: 2,
-  //     username: "Mira Tan",
-  //     email: "mira@gmail.com",
-  //     password: "mira123",
-  //     role: "technician",
-  //   },
-  //   {
-  //     id: 3,
-  //     username: "John Lee",
-  //     email: "john@gmail.com",
-  //     password: "john123",
-  //     role: "technician",
-  //   },
-  //   {
-  //     id: 4,
-  //     username: "Nina Aziz",
-  //     email: "nina@gmail.com",
-  //     password: "nina123",
-  //     role: "technician",
-  //   },
-  //   {
-  //     id: 5,
-  //     username: "Tom Yeo",
-  //     email: "tom@gmail.com",
-  //     password: "tom123",
-  //     role: "technician",
-  //   },
-  // ];
-
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    fetchUsers().then(setUsers).catch(console.error);
-  }, []);
+  const { users, handleDelete } = useUsers();
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
@@ -93,9 +50,17 @@ export default function UsersPage() {
                     <td className="pr-4">{user.password}</td>
                     <td>{user.role}</td>
                     <td className="py-2">
-                      <ButtonPri>
-                        <Link href={`./users/${user.id}`}>Edit</Link>
-                      </ButtonPri>
+                      <div className="flex gap-2">
+                        <ButtonPri>
+                          <Link href={`./users/${user.id}`}>Edit</Link>
+                        </ButtonPri>
+                        <ButtonPri
+                          onClick={() => handleDelete(user.id)}
+                          className="bg-red-600 hover:bg-red-700 text-white"
+                        >
+                          Delete
+                        </ButtonPri>
+                      </div>
                     </td>
                   </tr>
                 ))}
