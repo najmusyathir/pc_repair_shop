@@ -7,43 +7,43 @@ import Select from "@/components/Select";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 // Static user list (mock data)
-const users = [
-  {
-    id: 1,
-    username: "Admin",
-    email: "admin@gmail.com",
-    password: "admin123",
-    role: "admin",
-  },
-  {
-    id: 2,
-    username: "Mira Tan",
-    email: "mira@gmail.com",
-    password: "mira123",
-    role: "technician",
-  },
-  {
-    id: 3,
-    username: "John Lee",
-    email: "john@gmail.com",
-    password: "john123",
-    role: "technician",
-  },
-  {
-    id: 4,
-    username: "Nina Aziz",
-    email: "nina@gmail.com",
-    password: "nina123",
-    role: "technician",
-  },
-  {
-    id: 5,
-    username: "Tom Yeo",
-    email: "tom@gmail.com",
-    password: "tom123",
-    role: "technician",
-  },
-];
+// const users = [
+//   {
+//     id: 1,
+//     username: "Admin",
+//     email: "admin@gmail.com",
+//     password: "admin123",
+//     role: "admin",
+//   },
+//   {
+//     id: 2,
+//     username: "Mira Tan",
+//     email: "mira@gmail.com",
+//     password: "mira123",
+//     role: "technician",
+//   },
+//   {
+//     id: 3,
+//     username: "John Lee",
+//     email: "john@gmail.com",
+//     password: "john123",
+//     role: "technician",
+//   },
+//   {
+//     id: 4,
+//     username: "Nina Aziz",
+//     email: "nina@gmail.com",
+//     password: "nina123",
+//     role: "technician",
+//   },
+//   {
+//     id: 5,
+//     username: "Tom Yeo",
+//     email: "tom@gmail.com",
+//     password: "tom123",
+//     role: "technician",
+//   },
+// ];
 
 export default function EditUserPage() {
   const params = useParams();
