@@ -107,3 +107,53 @@ export const updateRepairById = async (id: string | string[], data: any) => {
 export const deleteRepairById = async (id: string | string[]) => {
   return await pool.query("DELETE FROM repairs WHERE id = $1", [id]);
 };
+
+// Get repairs for technician by status
+export const getRepairsForTechnician = async (status: string, technician_id?: string) => {
+  switch (status) {
+    case "available":
+      return (await pool.query(
+        `SELECT * FROM repairs WHERE status = 'Available' ORDER BY request_date DESC`
+      )).rows;
+
+    case "repairing":
+      if (!technician_id) throw new Error("Technician ID is required for repairing list");
+      return (await pool.query(
+        `SELECT * FROM repairs WHERE status = 'Repairing' AND technician_id = $1 ORDER BY request_date DESC`,
+        [technician_id]
+      )).rows;
+
+    case "completed":
+      if (!technician_id) throw new Error("Technician ID is required for completed list");
+      return (await pool.query(
+        `SELECT * FROM repairs WHERE status IN ('Repaired', 'Completed') AND technician_id = $1 ORDER BY request_date DESC`,
+        [technician_id]
+      )).rows;
+
+    default:
+      throw new Error("Invalid type provided");
+  }
+};
+
+// Update repair by technician – secured
+export const updateRepairByTechnician = async (
+  id: string,
+  technician_id: string,
+  status: string
+) => {
+  const check = await pool.query(
+    `SELECT * FROM repairs WHERE id = $1 AND technician_id = $2`,
+    [id, technician_id]
+  );
+
+  if (check.rows.length === 0) {
+    throw new Error("Unauthorized or not assigned to this repair");
+  }
+
+  await pool.query(
+    `UPDATE repairs SET status = $1 WHERE id = $2`,
+    [status, id]
+  );
+
+  return { message: "Repair status updated" };
+};
