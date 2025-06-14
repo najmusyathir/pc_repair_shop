@@ -1,5 +1,5 @@
 import axios from '@/lib/axios';
-import type { Repair } from '@/pages/api/repairs';
+import { Repair } from '@/pages/api/repairs';
 
 // GET /api/users
 export const fetchRepairs = async (): Promise<Repair[]> => {

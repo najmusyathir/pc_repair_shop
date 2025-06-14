@@ -1,5 +1,5 @@
 import axios from '@/lib/axios';
-import type { User } from '@/pages/api/users';
+import { User } from '@/pages/api/users';
 
 // GET /api/users
 export const fetchUsers = async (): Promise<User[]> => {

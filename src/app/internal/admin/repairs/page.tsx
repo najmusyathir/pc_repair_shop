@@ -105,7 +105,9 @@ export default function RepairsPage() {
                     <td>{repair.technician_id}</td>
                     <td className="py-2">
                       <ButtonPri>
-                        <Link href={`./repairs/${repair.id}`}>Edit</Link>
+                        <Link href={`/internal/admin/repairs/${repair.id}`}>
+                          Edit
+                        </Link>
                       </ButtonPri>
                     </td>
                   </tr>

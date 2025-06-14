@@ -5,6 +5,7 @@ import Input from "@/components/Input";
 import Textarea from "@/components/Textarea";
 import Select from "@/components/Select";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { useRouter } from "next/navigation";
 
 export default function NewReportForm() {
   const [form, setForm] = useState({
@@ -18,6 +19,8 @@ export default function NewReportForm() {
     status: "Pending",
   });
 
+  const router = useRouter();
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -27,25 +30,48 @@ export default function NewReportForm() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitting Report:", form);
+    try {
+      const res = await fetch("/api/repairs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error:", errorData.error);
+        alert("Submission failed: " + errorData.error);
+        return;
+      }
+
+      const data = await res.json();
+      alert("Report submitted! ID: " + data.id);
+      router.push("/internal/admin/repairs");
+    } catch (err) {
+      console.error("Submit error:", err);
+      alert("Unexpected error occurred");
+    }
   };
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
       <div className="w-6xl mx-auto px-6 py-12">
         <header className="mb-10">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Report</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Create New Report
+          </h1>
           <p className="text-gray-600">
-            Insert new customer{"'"}s repair request. 
+            Insert new customer{"'"}s repair request.
           </p>
         </header>
 
         <Breadcrumbs />
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-6 max-w-3xl rounded-xl shadow grid grid-cols-1 md:grid-cols-2 gap-6">
+          className="bg-white p-6 max-w-3xl rounded-xl shadow grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           {/* Left Column */}
           <Input
             label="Device Name"
@@ -120,7 +146,8 @@ export default function NewReportForm() {
           <div className="md:col-span-2 flex justify-end">
             <button
               type="submit"
-              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
+              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition"
+            >
               Submit Report
             </button>
           </div>

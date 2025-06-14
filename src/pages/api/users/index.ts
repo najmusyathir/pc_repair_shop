@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import pool from '../db';
+import pool from '../../db';
 
 export type User = {
   id: number;

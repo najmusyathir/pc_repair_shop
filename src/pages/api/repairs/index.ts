@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import pool from '../db';
+import pool from '../../db';
 
 export type Repair = {
   id: number;
@@ -43,7 +43,7 @@ async function getRepairs(
 
 async function createRepair(
   req: NextApiRequest,
-  res: NextApiResponse<{ message: string } | { error: string }>
+  res: NextApiResponse<{ message: string; id: number } | { error: string }>
 ) {
   const {
     device_name,
@@ -57,17 +57,17 @@ async function createRepair(
     warranty
   } = req.body;
 
-  // Basic validation
   if (!device_name || !cust_name || !cust_phone || !technician_id || !request_date) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
-    await pool.query(
+    const result = await pool.query(
       `INSERT INTO repairs 
-        (device_name, cust_name, cust_phone, technician_id, description, request_date, return_date, status, warranty)
-       VALUES 
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+    (device_name, cust_name, cust_phone, technician_id, description, request_date, return_date, status, warranty)
+   VALUES 
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+   RETURNING id;`,
       [
         device_name,
         cust_name,
@@ -76,12 +76,16 @@ async function createRepair(
         description || null,
         request_date,
         return_date || null,
-        status || 'pending',
-        warranty || null
+        status || 'Pending',
+        warranty || null,
       ]
     );
 
-    return res.status(201).json({ message: 'Repair inserted successfully' });
+    return res.status(201).json({
+      message: 'Repair inserted successfully',
+      id: result.rows[0].id, 
+    });
+
   } catch (error) {
     console.error('Error inserting repair:', error);
     return res.status(500).json({ error: 'Internal server error' });
