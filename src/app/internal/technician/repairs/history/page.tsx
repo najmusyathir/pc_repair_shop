@@ -13,8 +13,10 @@ export default function RepairsAvailablePage() {
     <main className="min-h-screen bg-gray-100 text-gray-800">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <header className="mb-10">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Available Repairs</h1>
-          <p className="text-gray-600">View all available repair requests.</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Repairs - History Job
+          </h1>
+          <p className="text-gray-600">View all taken repair history.</p>
         </header>
 
         <Breadcrumbs />
@@ -40,8 +42,7 @@ export default function RepairsAvailablePage() {
                 {repairs.map((repair) => (
                   <tr
                     key={repair.id}
-                    className="border-b border-gray-300 hover:bg-gray-200"
-                  >
+                    className="border-b border-gray-300 hover:bg-gray-200">
                     <td className="py-3 px-4">{repair.id}</td>
                     <td className="pr-4">{repair.cust_name}</td>
                     <td className="pr-4">{repair.device_name}</td>
@@ -52,7 +53,8 @@ export default function RepairsAvailablePage() {
                     <td>{repair.technician_id}</td>
                     <td className="py-2">
                       <div className="flex gap-2">
-                        <Link href={`/internal/technician/repairs/${repair.id}`}>
+                        <Link
+                          href={`/internal/technician/repairs/${repair.id}`}>
                           <ButtonPri>Check Details</ButtonPri>
                         </Link>
                       </div>
