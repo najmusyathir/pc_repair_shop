@@ -2,46 +2,16 @@
 
 import PanelCard from "@/components/PanelCard";
 import StatusBadge from "@/components/StatusBadge";
+import useRepairSearch from "./internal/admin/hooks/useRepairSearch";
 import { useState } from "react";
 
-interface RepairRecord {
-  id: number;
-  device: string;
-  date: string;
-  status: string;
-}
-
-interface PhoneData {
-  [phone: string]: RepairRecord[];
-}
-
-const mockData: PhoneData = {
-  "0123456789": [
-    { id: 101, device: "Dell Laptop", date: "2025-06-10", status: "Repairing" },
-    { id: 102, device: "iPhone 13", date: "2025-06-11", status: "Completed" },
-    { id: 103, device: "Samsung Tab", date: "2025-06-12", status: "Ongoing" },
-  ],
-  "0112233445": [
-    { id: 104, device: "MacBook Air", date: "2025-06-13", status: "Pending" },
-  ],
-  "0199988776": [],
-};
-
 export default function Home() {
-  const [results, setResults] = useState<RepairRecord[] | string>([]);
+  const [phone, setPhone] = useState("");
+  const { results, loading, error, searchRepairs } = useRepairSearch();
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const input = document.getElementById("phone") as HTMLInputElement;
-    const phone = input?.value.trim();
-
-    const result = mockData[phone]
-      ? mockData[phone].length
-        ? mockData[phone]
-        : "No records Found"
-      : "Phone number not found.";
-
-    setResults(result);
+    searchRepairs(phone);
   };
 
   return (
@@ -85,15 +55,22 @@ export default function Home() {
                 name="phone"
                 id="phone"
                 placeholder="e.g. 0123456789"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 required
               />
               <button
                 type="submit"
-                className="px-5 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
+                className="px-5 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition"
+              >
                 Search
               </button>
             </form>
+
+            {loading && (
+              <p className="text-center text-gray-600">Searching...</p>
+            )}
 
             {typeof results === "string" ? (
               <p className="text-center text-red-600 mt-4">{results}</p>
@@ -108,26 +85,40 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {results.map((r, i) => (
+                  {results.map((repair, i) => (
                     <tr
                       key={i}
-                      className="text-sm border-t border-gray-300 py-2">
-                      <td className="px-2">{r.id}</td>
-                      <td>{r.device}</td>
-                      <td>{r.date}</td>
-                      <td className="py-2 flex">
-                        <StatusBadge status={r.status} />
+                      className="text-sm border-t border-gray-300 py-2"
+                    >
+                      <td className="px-2">{repair.id}</td>
+                      <td className="px-2">{repair.device_name}</td>
+                      <td className="px-2">
+                        {new Date(repair.date).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )}
+                      </td>{" "}
+                      <td className="py-2">
+                        <StatusBadge status={repair.status} />
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : null}
+
+            {error && (
+              <p className="text-center text-red-600 mt-4">
+                Something went wrong: {error}
+              </p>
+            )}
           </div>
         </section>
       </div>
     </main>
   );
 }
-
-
