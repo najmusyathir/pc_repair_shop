@@ -1,60 +1,22 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import pool from '../../db';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createUser, getAllUsers } from "@/lib/controller/usersController";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export type User = {
-  id: number;
-  username: string;
-  email: string;
-  password: string;
-  role: string;
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<User[] | { message: string } | { error: string }>
-) {
-  switch (req.method) {
-    case 'GET':
-      return getUsers(req, res);
-    case 'POST':
-      return createUser(req, res);
-    default:
-      return res.status(405).json({ error: 'Method not allowed' });
-  }
-}
-
-async function getUsers(
-  req: NextApiRequest,
-  res: NextApiResponse<User[] | { error: string }>
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const result = await pool.query<User>('SELECT * FROM users ORDER BY id ASC');
-    return res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
-}
+    if (req.method === "GET") {
+      const users = await getAllUsers();
+      return res.status(200).json(users);
+    }
 
-async function createUser(
-  req: NextApiRequest,
-  res: NextApiResponse<{ message: string } | { error: string }>
-) {
-  const { username, email, password, role } = req.body;
-  if (!username || !email || !password || !role) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+    if (req.method === "POST") {
+      const id = await createUser(req.body);
+      return res.status(201).json({ message: "User created", id });
+    }
 
-  try {
-    await pool.query(
-      `INSERT INTO users (username, email, password, role)
-       VALUES ($1, $2, $3, $4)
-       ON CONFLICT (email) DO NOTHING;`,
-      [username, email, password, role]
-    );
-    return res.status(201).json({ message: 'User created successfully' });
-  } catch (error) {
-    console.error('Error inserting user:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(405).json({ error: "Method not allowed" });
+  } catch (error: any) {
+    console.error("Error in /api/users:", error);
+    return res.status(500).json({ error: error.message || "Internal server error" });
   }
 }

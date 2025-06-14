@@ -1,10 +1,8 @@
-import axios from 'axios';
+// /lib/axios.ts
+import axios from "axios";
 
 const instance = axios.create({
-  baseURL: '/api', 
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: "",
 });
 
 export default instance;

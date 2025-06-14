@@ -1,92 +1,37 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
 import Breadcrumbs from "@/components/Breadcrumbs";
-
-// Static user list (mock data)
-// const users = [
-//   {
-//     id: 1,
-//     username: "Admin",
-//     email: "admin@gmail.com",
-//     password: "admin123",
-//     role: "admin",
-//   },
-//   {
-//     id: 2,
-//     username: "Mira Tan",
-//     email: "mira@gmail.com",
-//     password: "mira123",
-//     role: "technician",
-//   },
-//   {
-//     id: 3,
-//     username: "John Lee",
-//     email: "john@gmail.com",
-//     password: "john123",
-//     role: "technician",
-//   },
-//   {
-//     id: 4,
-//     username: "Nina Aziz",
-//     email: "nina@gmail.com",
-//     password: "nina123",
-//     role: "technician",
-//   },
-//   {
-//     id: 5,
-//     username: "Tom Yeo",
-//     email: "tom@gmail.com",
-//     password: "tom123",
-//     role: "technician",
-//   },
-// ];
+import { useUserForm } from "../../hooks/useUserForm";
 
 export default function EditUserPage() {
   const params = useParams();
-  const id = parseInt(params.id as string);
+  const id = params?.id ? parseInt(params.id as string) : undefined;
 
-  const existingUser = users.find((u) => u.id === id);
+  const { form, handleChange, handleSubmit, loading, notFound } = useUserForm(id);
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    role: "technician",
-  });
+  if (!id || isNaN(id)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-600">
+        Invalid user ID.
+      </div>
+    );
+  }
 
-  // Load user data into form on mount
-  useEffect(() => {
-    if (existingUser) {
-      setForm({
-        username: existingUser.username,
-        email: existingUser.email,
-        password: existingUser.password,
-        role: existingUser.role,
-      });
-    }
-  }, [existingUser]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Updated user:", form);
-    // Replace with actual PUT/PATCH API call
-  };
-
-  if (!existingUser) {
+  if (notFound) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600">
         User not found.
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500">
+        Loading...
       </div>
     );
   }
@@ -104,7 +49,8 @@ export default function EditUserPage() {
         <Breadcrumbs />
         <form
           onSubmit={handleSubmit}
-          className="bg-white max-w-xl p-6 rounded-xl shadow flex flex-col gap-6">
+          className="bg-white max-w-xl p-6 rounded-xl shadow flex flex-col gap-6"
+        >
           <Input
             label="Name (Username)"
             name="username"
@@ -138,7 +84,8 @@ export default function EditUserPage() {
           <div className="md:col-span-2 flex justify-end">
             <button
               type="submit"
-              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
+              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition"
+            >
               Save Changes
             </button>
           </div>

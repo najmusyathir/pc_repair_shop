@@ -1,30 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { useUserForm } from "../../hooks/useUserForm";
 
 export default function CreateUserForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "technician", // default role
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("User data:", form);
-    // You can POST this to your backend
-  };
+  const { form, handleChange, handleSubmit } = useUserForm();
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
@@ -35,18 +17,20 @@ export default function CreateUserForm() {
             Register new admin or technician for this system
           </p>
         </header>
-        
+
         <Breadcrumbs />
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-6 rounded-xl max-w-xl shadow flex flex-col gap-6">
+          className="bg-white p-6 rounded-xl max-w-xl shadow flex flex-col gap-6"
+        >
           <Input
-            label="Name (Username)"
-            name="name"
-            value={form.name}
+            label="Username"
+            name="username"
+            value={form.username}
             onChange={handleChange}
             required
           />
+
           <Input
             label="Email"
             type="email"
@@ -73,7 +57,8 @@ export default function CreateUserForm() {
           <div className="md:col-span-2 flex justify-end">
             <button
               type="submit"
-              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
+              className="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition"
+            >
               Create User
             </button>
           </div>

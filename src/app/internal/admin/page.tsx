@@ -3,53 +3,9 @@
 import StatusBadge from "@/components/StatusBadge";
 
 import { useEffect, useState } from "react";
-import { fetchRepairs } from "@/lib/endpointRepair";
-import { Repair } from "@/pages/api/repairs";
+import { fetchRepairs, Repair } from "@/lib/endpointRepair";
 
 export default function Dashboard() {
-  // const repairs = [
-  //   {
-  //     id: 1,
-  //     customer: "Ali Rahman",
-  //     device: "Laptop",
-  //     issue: "No power",
-  //     status: "Ongoing",
-  //     technician: "Tech#001",
-  //   },
-  //   {
-  //     id: 2,
-  //     customer: "Mira Tan",
-  //     device: "Desktop",
-  //     issue: "GPU not detected",
-  //     status: "Pending",
-  //     technician: "Tech#004",
-  //   },
-  //   {
-  //     id: 3,
-  //     customer: "John Lee",
-  //     device: "MacBook",
-  //     issue: "Screen cracked",
-  //     status: "Completed",
-  //     technician: "Tech#003",
-  //   },
-  //   {
-  //     id: 4,
-  //     customer: "Nina Aziz",
-  //     device: "PC",
-  //     issue: "No display",
-  //     status: "Failed",
-  //     technician: "Tech#002",
-  //   },
-  //   {
-  //     id: 5,
-  //     customer: "Tom Yeo",
-  //     device: "Notebook",
-  //     issue: "HDD error",
-  //     status: "Repairing",
-  //     technician: "Tech#005",
-  //   },
-  // ];
-
   const [repairs, setRepairs] = useState<Repair[]>([]);
 
   useEffect(() => {
