@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { deleteRepairById, getRepairById, updateRepairById } from "@/lib/controller/repairsController";
+import {
+  deleteRepairById,
+  getRepairById,
+  updateRepairById,
+  updateRepairByTechnician,
+} from "@/lib/controller/repairsController";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,6 +24,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === "PUT") {
+      const { technician_id, status } = req.body;
+
+      // Use secure technician update if only status and technician_id are being changed
+      if (
+        technician_id !== undefined &&
+        status !== undefined &&
+        Object.keys(req.body).length === 2
+      ) {
+        const result = await updateRepairByTechnician(
+          id.toString(),
+          technician_id.toString(),
+          status.toString()
+        );
+        return res.status(200).json(result);
+      }
+
+      // Fallback to full update if other fields exist
       await updateRepairById(id, req.body);
       return res.status(200).json({ message: "Repair updated successfully" });
     }

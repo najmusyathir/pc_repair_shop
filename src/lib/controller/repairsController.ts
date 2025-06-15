@@ -7,13 +7,18 @@ export async function getRepairsByPhone(phone: string) {
     [phone]
   );
 
-  return result.rows; 
+  return result.rows;
 }
 
 // Get all repairs
-export const getAllRepairs = async () => {
-  const result = await pool.query("SELECT * FROM repairs ORDER BY id ASC");
-  return result.rows;
+export const getAllRepairs = async (res: any) => {
+  const result = await pool.query(`
+  SELECT repairs.*, users.username AS technician_name
+  FROM repairs
+  LEFT JOIN users ON repairs.technician_id = users.id
+  ORDER BY request_date DESC
+`);
+  return res.status(200).json(result.rows);
 };
 
 // Get a single repair by ID
@@ -36,7 +41,7 @@ export const createNewRepair = async (data: any) => {
     warranty,
   } = data;
 
-  if (!device_name || !cust_name || !cust_phone || !technician_id || !request_date) {
+  if (!device_name || !cust_name || !cust_phone || !request_date) {
     throw new Error("Missing required fields");
   }
 
@@ -142,17 +147,24 @@ export const updateRepairByTechnician = async (
   status: string
 ) => {
   const check = await pool.query(
-    `SELECT * FROM repairs WHERE id = $1 AND technician_id = $2`,
-    [id, technician_id]
+    `SELECT technician_id FROM repairs WHERE id = $1`,
+    [id]
   );
 
   if (check.rows.length === 0) {
+    throw new Error("Repair not found");
+  }
+
+  const currentTechId = check.rows[0].technician_id;
+
+  // If technician_id is null, allow claiming the repair
+  if (currentTechId && currentTechId !== parseInt(technician_id)) {
     throw new Error("Unauthorized or not assigned to this repair");
   }
 
   await pool.query(
-    `UPDATE repairs SET status = $1 WHERE id = $2`,
-    [status, id]
+    `UPDATE repairs SET technician_id = $1, status = $2 WHERE id = $3`,
+    [technician_id, status, id]
   );
 
   return { message: "Repair status updated" };

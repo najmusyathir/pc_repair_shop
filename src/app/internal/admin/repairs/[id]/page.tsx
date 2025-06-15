@@ -1,15 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
-// src/app/internal/admin/repairs/[id]/page.tsx
 "use client";
 
 import Input from "@/components/Input";
 import Select from "@/components/Select";
 import Textarea from "@/components/Textarea";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useRepairForm } from "../../hooks/useRepairForm";
+import { useRepairForm } from "../../../../../lib/hooks/useRepairForm";
 
 export default function EditReportPage() {
-  const { form, handleChange, handleSubmit, loading, notFound } = useRepairForm();
+  const { form, handleChange, handleSubmit, loading, notFound } =
+    useRepairForm();
 
   if (notFound) {
     return (
@@ -44,18 +44,55 @@ export default function EditReportPage() {
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-xl max-w-3xl shadow grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <Input label="Device Name" name="device_name" value={form.device_name} onChange={handleChange} required />
-          <Input label="Customer Name" name="cust_name" value={form.cust_name} onChange={handleChange} required />
-          <Input label="Customer Phone" name="cust_phone" value={form.cust_phone} onChange={handleChange} required />
-          <Input label="Technician ID" name="technician_id" value={form.technician_id} onChange={handleChange} required />
-          <Input label="Request Date" name="request_date" type="date" value={form.request_date} onChange={handleChange} required />
-          <Input label="Return Date" name="return_date" type="date" value={form.return_date} onChange={handleChange} />
+          <Input
+            label="Device Name"
+            name="device_name"
+            value={form.device_name ?? ""}
+            onChange={handleChange}
+            required
+          />{" "}
+          <Input
+            label="Customer Name"
+            name="cust_name"
+            value={form.cust_name ?? ""}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Customer Phone"
+            name="cust_phone"
+            value={form.cust_phone ?? ""}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Technician ID"
+            name="technician_id"
+            value={form.technician_id ?? ""}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Request Date"
+            name="request_date"
+            type="date"
+            value={form.request_date ?? ""}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Return Date"
+            name="return_date"
+            type="date"
+            value={form.return_date ?? ""}
+            onChange={handleChange}
+          />
           <Select
             label="Status"
             name="status"
-            value={form.status}
+            value={form.status ?? ""}
             onChange={handleChange}
-            options={["Pending", "Ongoing", "Repairing", "Completed", "Failed", "Canceled"]}
+            options={["Pending", "Completed", "Repairing", "Available"]}
           />
           <div className="md:col-span-2">
             <Textarea

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import pool from "@/pages/db";
-import bcrypt from "bcrypt";
 
 // Get all users 
 export const getAllUsers = async () => {
@@ -22,13 +21,11 @@ export const createUser = async (data: any) => {
     throw new Error("Missing required fields");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   const result = await pool.query(
     `INSERT INTO users (username, email, password, role)
      VALUES ($1, $2, $3, $4)
      RETURNING id`,
-    [username, email, hashedPassword, role]
+    [username, email, password, role]
   );
 
   return result.rows[0].id;

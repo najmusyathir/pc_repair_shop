@@ -2,6 +2,8 @@
 
 import ButtonPri from "@/components/ButtonPri";
 import { useRouter } from "next/navigation";
+//import { useState } from "react";
+//import axios from "axios";
 import Input from "@/components/Input";
 import { useLogin } from "@/lib/hooks/auth/useLogin";
 
@@ -18,6 +20,7 @@ export default function LoginPage() {
           <p className="text-gray-500 mb-6 text-center">
             Login with your registered email and password.
           </p>
+
           <form onSubmit={onLogin} className="space-y-4">
             <Input
               type="email"
@@ -40,6 +43,7 @@ export default function LoginPage() {
               Login
             </ButtonPri>
           </form>
+
           <div className="mt-4">
             <ButtonPri onClick={() => router.push("/")} className="w-full">
               Back to Home
