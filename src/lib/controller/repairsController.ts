@@ -3,7 +3,7 @@ import pool from "@/pages/db";
 
 export async function getRepairsByPhone(phone: string) {
   const result = await pool.query(
-    `SELECT id, device_name, request_date AS date, status FROM repairs WHERE cust_phone = $1 ORDER BY request_date DESC`,
+    `SELECT * FROM repairs WHERE cust_phone = $1 ORDER BY request_date DESC`,
     [phone]
   );
 

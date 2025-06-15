@@ -1,12 +1,31 @@
 "use client";
- 
+
 import StatusBadge from "@/components/StatusBadge";
 import useRepairSearch from "./internal/admin/hooks/useRepairSearch";
 import { useState } from "react";
+import ButtonPri from "@/components/ButtonPri";
+import PopupInvoice from "@/components/popupInvoice";
+import Image from "next/image";
+
+interface RepairRecord {
+  id: number;
+  device_name: string;
+  date: string;
+  status: string;
+  cust_name: string;
+  cust_phone: string;
+  description: string;
+  warranty?: string;
+  price?: number;
+}
 
 export default function Home() {
   const [phone, setPhone] = useState("");
   const { results, loading, error, searchRepairs } = useRepairSearch();
+  const [selectedRepair, setSelectedRepair] = useState<RepairRecord | null>(
+    null
+  );
+  console.log("Repair search results:");
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,9 +36,10 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 text-gray-800">
       <div className="max-w-6xl mx-auto px-6 py-20">
         <header className="mb-20 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-4">
-            FixCore Systems
-          </h1>
+          <div className="w-full flex justify-center">
+          <Image src="/logo.png" alt="logo" width={400} height={120} />
+          </div>
+
           <p className="text-lg text-gray-600">
             Professional PC Repair Request & Tracking System
           </p>
@@ -53,6 +73,7 @@ export default function Home() {
             <p className="text-gray-500 mb-6">
               Enter your phone number to track your device repair progress.
             </p>
+
             <form onSubmit={onSearch} className="flex gap-2 mb-4">
               <input
                 type="text"
@@ -85,10 +106,11 @@ export default function Home() {
                     <th>Device</th>
                     <th>Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {results.map((repair, i) => (
+                  {(results as RepairRecord[]).map((repair, i) => (
                     <tr
                       key={i}
                       className="text-sm border-t border-gray-300 py-2">
@@ -100,9 +122,17 @@ export default function Home() {
                           month: "long",
                           year: "numeric",
                         })}
-                      </td>{" "}
+                      </td>
+
+                      </td>
+
                       <td className="py-2">
                         <StatusBadge status={repair.status} />
+                      </td>
+                      <td className="py-2">
+                        <ButtonPri onClick={() => setSelectedRepair(repair)}>
+                          Details
+                        </ButtonPri>
                       </td>
                     </tr>
                   ))}
@@ -117,6 +147,11 @@ export default function Home() {
             )}
           </div>
         </section>
+
+        <PopupInvoice
+          repair={selectedRepair}
+          onClose={() => setSelectedRepair(null)}
+        />
       </div>
     </main>
   );
