@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import LogoutButton from "./LogoutButton";
+import Image from "next/image";
 
 const navItems = {
   admin: [
@@ -38,7 +39,7 @@ export default async function Sidebar() {
     <aside className="w-64 h-screen bg-gray-800 text-white border-r shadow fixed top-0 left-0 z-40 flex flex-col justify-between">
       <div>
         <div className="p-6 font-bold text-xl border-b border-gray-700">
-          PC Repair Shop
+          <Image src="/logo.png" alt="logo" width={200} height={80} />
         </div>
         <nav className="p-4 space-y-2 text-lg">
           {links.map((link) => (
