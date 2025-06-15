@@ -4,14 +4,10 @@ import pool from "@/pages/db";
 
 // List of allowed statuses
 const allowedStatuses = [
-  "Pending",
-  "Ongoing",
   "Repairing",
   "Completed",
-  "Failed",
-  "Canceled",
   "Available",
-  "Taken",
+  "Pending",
 ];
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -1,7 +1,7 @@
 "use client";
 
 import StatusBadge from "@/components/StatusBadge";
-import useRepairSearch from "./internal/admin/hooks/useRepairSearch";
+import useRepairSearch from "../lib/hooks/useRepairSearch";
 import { useState } from "react";
 import ButtonPri from "@/components/ButtonPri";
 import PopupInvoice from "@/components/popupInvoice";
@@ -123,9 +123,6 @@ export default function Home() {
                           year: "numeric",
                         })}
                       </td>
-
-                      </td>
-
                       <td className="py-2">
                         <StatusBadge status={repair.status} />
                       </td>

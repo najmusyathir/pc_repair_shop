@@ -6,6 +6,7 @@ export type Repair = {
   cust_name: string;
   cust_phone: string;
   technician_id: number;
+  technician_name?: string; 
   description: string;
   request_date: string;
   return_date: string | null;
@@ -13,11 +14,32 @@ export type Repair = {
   warranty: number | null;
 };
 
-// Get all repairs
-export const fetchRepairs = async (): Promise<Repair[]> => {
-  const response = await axios.get("/api/repairs");
-  return response.data;
+type RepairFilters = {
+  status?: string[];
+  technicianId?: number;
+  technicianName?: string;
 };
+
+// Get all repairs
+export async function fetchRepairs(filters?: RepairFilters): Promise<Repair[]> {
+  const queryParams = new URLSearchParams();
+
+  if (filters?.status?.length) {
+    filters.status.forEach((s) => queryParams.append("status", s));
+  }
+
+  if (filters?.technicianId !== undefined) {
+    queryParams.append("technicianId", filters.technicianId.toString());
+  }
+
+  if (filters?.technicianName) {
+    queryParams.append("techname", filters.technicianName); 
+  }
+
+  const res = await fetch(`/api/repairs?${queryParams.toString()}`);
+  if (!res.ok) throw new Error("Failed to fetch repairs");
+  return res.json();
+}
 
 // Get a single repair by ID
 export const fetchRepairById = async (id: number): Promise<Repair> => {

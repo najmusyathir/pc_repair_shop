@@ -4,11 +4,10 @@ import Link from "next/link";
 import StatusBadge from "@/components/StatusBadge";
 import ButtonPri from "@/components/ButtonPri";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useRepairs } from "../hooks/useRepair";
+import { useRepairs } from "../../../../lib/hooks/useRepair";
 
 export default function RepairsPage() {
   const { repairs, handleDelete } = useRepairs();
-
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
       <div className="max-w-6xl mx-auto px-6 py-12">
@@ -52,7 +51,7 @@ export default function RepairsPage() {
                     <td className="pr-4 py-4">
                       <StatusBadge status={repair.status} />
                     </td>
-                    <td>{repair.technician_id}</td>
+                    <td>{repair.technician_name}</td>
                     <td className="py-2">
                       <div className="flex gap-2">
                         <Link href={`/internal/admin/repairs/${repair.id}`}>

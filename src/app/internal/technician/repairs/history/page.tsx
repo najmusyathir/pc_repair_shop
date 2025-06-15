@@ -1,13 +1,27 @@
 "use client";
 
-import Link from "next/link";
 import StatusBadge from "@/components/StatusBadge";
-import ButtonPri from "@/components/ButtonPri";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useRepairs } from "@/app/internal/admin/hooks/useRepair";
+import { useRepairs } from "@/lib/hooks/useRepair";
+import { useEffect, useState } from "react";
 
 export default function RepairsAvailablePage() {
-  const { repairs } = useRepairs();
+  const { repairs } = useRepairs({ status: ["Completed"] });
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const cookies = document.cookie.split("; ");
+      const authCookie = cookies.find((row) => row.startsWith("auth="));
+      if (authCookie) {
+        const value = decodeURIComponent(authCookie.split("=")[1]);
+        const parsed = JSON.parse(value);
+        setCurrentUserId(parsed.id);
+      }
+    } catch (err) {
+      console.error("Failed to read auth cookie:", err);
+    }
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
@@ -34,33 +48,26 @@ export default function RepairsAvailablePage() {
                   <th className="py-2 pr-4">Device</th>
                   <th className="py-2 pr-4">Issue</th>
                   <th className="py-2 pr-4">Status</th>
-                  <th className="py-2">Technician</th>
-                  <th className="py-2">Action</th>
                 </tr>
               </thead>
               <tbody className="text-sm text-gray-700">
-                {repairs.map((repair) => (
-                  <tr
-                    key={repair.id}
-                    className="border-b border-gray-300 hover:bg-gray-200">
-                    <td className="py-3 px-4">{repair.id}</td>
-                    <td className="pr-4">{repair.cust_name}</td>
-                    <td className="pr-4">{repair.device_name}</td>
-                    <td className="pr-4">{repair.description}</td>
-                    <td className="pr-4 py-4">
-                      <StatusBadge status={repair.status} />
-                    </td>
-                    <td>{repair.technician_id}</td>
-                    <td className="py-2">
-                      <div className="flex gap-2">
-                        <Link
-                          href={`/internal/technician/repairs/${repair.id}`}>
-                          <ButtonPri>Check Details</ButtonPri>
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {repairs.map(
+                  (repair) =>
+                    repair.technician_id === currentUserId && (
+                      <tr
+                        key={repair.id}
+                        className="border-b border-gray-300 hover:bg-gray-200"
+                      >
+                        <td className="py-3 px-4">{repair.id}</td>
+                        <td className="pr-4">{repair.cust_name}</td>
+                        <td className="pr-4">{repair.device_name}</td>
+                        <td className="pr-4">{repair.description}</td>
+                        <td className="pr-4 py-4">
+                          <StatusBadge status={repair.status} />
+                        </td>
+                      </tr>
+                    )
+                )}
               </tbody>
             </table>
           </div>

@@ -4,7 +4,7 @@
 import Link from "next/link";
 import ButtonPri from "@/components/ButtonPri";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useUsers } from "../hooks/useUsers";
+import { useUsers } from "../../../../lib/hooks/useUsers";
 
 export default function UsersPage() {
   const { users, handleDelete } = useUsers();

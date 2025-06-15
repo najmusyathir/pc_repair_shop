@@ -32,7 +32,7 @@ export default function Dashboard() {
             <p className="text-3xl font-bold text-blue-600">
               {
                 repairs.filter(
-                  (repair) => repair.status.toLowerCase() === "active"
+                  (repair) => repair.status.toLowerCase() === "repairing"
                 ).length
               }
             </p>
@@ -57,8 +57,9 @@ export default function Dashboard() {
             </h2>
             <p className="text-3xl font-bold text-blue-600">
               {
-                repairs.filter((repair) => repair.status.toLowerCase() === "completed")
-                  .length
+                repairs.filter(
+                  (repair) => repair.status.toLowerCase() === "completed"
+                ).length
               }
             </p>
           </div>
@@ -93,7 +94,7 @@ export default function Dashboard() {
                     <td className="pr-4 py-4">
                       <StatusBadge status={repair.status} />
                     </td>
-                    <td>{repair.technician_id}</td>
+                    <td>{repair.technician_name}</td>
                   </tr>
                 ))}
               </tbody>

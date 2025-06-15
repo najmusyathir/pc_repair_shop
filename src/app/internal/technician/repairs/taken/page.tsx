@@ -1,13 +1,54 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import StatusBadge from "@/components/StatusBadge";
-import ButtonPri from "@/components/ButtonPri";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useRepairs } from "@/app/internal/admin/hooks/useRepair";
+import { useRepairs } from "@/lib/hooks/useRepair";
 
 export default function RepairsAvailablePage() {
-  const { repairs } = useRepairs();
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const cookies = document.cookie.split("; ");
+      const authCookie = cookies.find((row) => row.startsWith("auth="));
+      if (authCookie) {
+        const value = decodeURIComponent(authCookie.split("=")[1]);
+        const parsed = JSON.parse(value);
+        setCurrentUserId(parsed.id);
+      }
+    } catch (err) {
+      console.error("Failed to read auth cookie:", err);
+    }
+  }, []);
+
+  const { repairs, refresh } = useRepairs({
+    status: ["Repairing"],
+    technician_id: currentUserId ?? undefined,
+  });
+
+  const handleEndRepair = async (repairId: number) => {
+    try {
+      const res = await fetch(`/api/repairs/${repairId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: "Completed",
+          technician_id: currentUserId,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to update repair");
+
+      alert("Repair marked as completed.");
+      refresh();
+    } catch (err) {
+      console.error("Error completing repair:", err);
+      alert("An error occurred while updating the repair.");
+    }
+  };
 
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
@@ -16,7 +57,7 @@ export default function RepairsAvailablePage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Repairs - Taken Job
           </h1>
-          <p className="text-gray-600">View all taken repair jobs.</p>
+          <p className="text-gray-600">Your active repair tasks in progress.</p>
         </header>
 
         <Breadcrumbs />
@@ -34,7 +75,6 @@ export default function RepairsAvailablePage() {
                   <th className="py-2 pr-4">Device</th>
                   <th className="py-2 pr-4">Issue</th>
                   <th className="py-2 pr-4">Status</th>
-                  <th className="py-2">Technician</th>
                   <th className="py-2">Action</th>
                 </tr>
               </thead>
@@ -42,7 +82,8 @@ export default function RepairsAvailablePage() {
                 {repairs.map((repair) => (
                   <tr
                     key={repair.id}
-                    className="border-b border-gray-300 hover:bg-gray-200">
+                    className="border-b border-gray-300 hover:bg-gray-200"
+                  >
                     <td className="py-3 px-4">{repair.id}</td>
                     <td className="pr-4">{repair.cust_name}</td>
                     <td className="pr-4">{repair.device_name}</td>
@@ -50,14 +91,13 @@ export default function RepairsAvailablePage() {
                     <td className="pr-4 py-4">
                       <StatusBadge status={repair.status} />
                     </td>
-                    <td>{repair.technician_id}</td>
                     <td className="py-2">
-                      <div className="flex gap-2">
-                        <Link
-                          href={`/internal/technician/repairs/${repair.id}`}>
-                          <ButtonPri>Check Details</ButtonPri>
-                        </Link>
-                      </div>
+                      <button
+                        onClick={() => handleEndRepair(repair.id)}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                      >
+                        End
+                      </button>
                     </td>
                   </tr>
                 ))}

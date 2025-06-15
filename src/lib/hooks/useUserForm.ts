@@ -1,6 +1,6 @@
-// hooks/useUserForm.ts
+// src/hooks/useUserForm.ts
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 type UserFormData = {
   username: string;
@@ -9,42 +9,45 @@ type UserFormData = {
   role: string;
 };
 
-export const useUserForm = (id?: number) => {
-  const router = useRouter();
-  const [form, setForm] = useState<UserFormData>({
-    username: "",
-    email: "",
-    password: "",
-    role: "technician",
-  });
+const defaultForm: UserFormData = {
+  username: "",
+  email: "",
+  password: "",
+  role: "technician",
+};
 
-  const [loading, setLoading] = useState(!!id); // only load if editing
+export const useUserForm = () => {
+  const router = useRouter();
+  const params = useParams();
+  const id = params?.id ? parseInt(params.id as string) : undefined;
+
+  const [form, setForm] = useState<UserFormData>(defaultForm);
+  const [loading, setLoading] = useState(!!id);
   const [notFound, setNotFound] = useState(false);
 
-  // Fetch user data if editing
   useEffect(() => {
-    if (id) {
-      fetch(`/api/users/${id}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("User not found");
-          return res.json();
-        })
-        .then((data) => {
-          setForm({
-            username: data.username || "",
-            email: data.email || "",
-            password: "",
-            role: data.role || "technician",
-          });
-        })
-        .catch((err) => {
-          console.error("Fetch error:", err);
-          setNotFound(true);
-        })
-        .finally(() => {
-          setLoading(false);
+    if (!id) return;
+
+    fetch(`/api/users/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("User not found");
+        return res.json();
+      })
+      .then((data) => {
+        setForm({
+          username: data.username || "",
+          email: data.email || "",
+          password: "",
+          role: data.role || "technician",
         });
-    }
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setNotFound(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [id]);
 
   const handleChange = (
@@ -78,5 +81,11 @@ export const useUserForm = (id?: number) => {
     }
   };
 
-  return { form, handleChange, handleSubmit, loading, notFound };
+  return {
+    form,
+    handleChange,
+    handleSubmit,
+    loading,
+    notFound,
+  };
 };

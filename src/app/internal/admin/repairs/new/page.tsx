@@ -1,12 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-// src/app/internal/admin/repairs/new/page.tsx
 "use client";
 
 import Input from "@/components/Input";
 import Textarea from "@/components/Textarea";
 import Select from "@/components/Select";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { useRepairForm } from "../../hooks/useRepairForm";
+import { useRepairForm } from "@/lib/hooks/useRepairForm";
 
 export default function NewReportForm() {
   const { form, handleChange, handleSubmit } = useRepairForm();
@@ -22,6 +21,7 @@ export default function NewReportForm() {
         </header>
 
         <Breadcrumbs />
+
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 max-w-3xl rounded-xl shadow grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -50,7 +50,7 @@ export default function NewReportForm() {
           <Input
             label="Technician ID"
             name="technician_id"
-            value={form.technician_id}
+            value={form.technician_id ?? ""} 
             onChange={handleChange}
           />
           <Input
@@ -73,14 +73,7 @@ export default function NewReportForm() {
             name="status"
             value={form.status}
             onChange={handleChange}
-            options={[
-              "Pending",
-              "Ongoing",
-              "Completed",
-              "Failed",
-              "Repairing",
-              "Canceled",
-            ]}
+            options={["Available", "Repairing", "Completed", "Pending"]}
           />
           <div className="md:col-span-2">
             <Textarea
