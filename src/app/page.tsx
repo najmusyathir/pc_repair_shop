@@ -1,6 +1,5 @@
 "use client";
-
-import PanelCard from "@/components/PanelCard";
+ 
 import StatusBadge from "@/components/StatusBadge";
 import useRepairSearch from "./internal/admin/hooks/useRepairSearch";
 import { useState } from "react";
@@ -27,19 +26,24 @@ export default function Home() {
         </header>
 
         <section className="grid md:grid-cols-5 gap-6 mb-20">
-          <div className="space-y-10 col-span-2">
-            <PanelCard
-              title="Admin Panel"
-              description="Create and manage repair requests, assign technicians, and generate invoices."
-              href="/internal/admin"
-              color="blue"
-            />
-            <PanelCard
-              title="Technician Panel"
-              description="Update repair statuses and manage assigned tasks efficiently."
-              href="/internal/technician"
-              color="green"
-            />
+          <div className="col-span-2">
+            <div className="bg-white shadow-lg rounded-2xl p-8 h-full flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl font-semibold mb-3 text-blue-700">
+                  Your Trusted PC Repair Partner
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  FixCore Systems offers reliable, fast, and transparent
+                  computer repair services. Our system keeps you updated every
+                  step of the way.
+                </p>
+              </div>
+              <button
+                onClick={() => (window.location.href = "/login")}
+                className="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition self-start">
+                Login as Admin
+              </button>
+            </div>
           </div>
 
           <div className="bg-white shadow-lg rounded-2xl p-8 md:col-span-3">
@@ -62,8 +66,7 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="px-5 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition"
-              >
+                className="px-5 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 transition">
                 Search
               </button>
             </form>
@@ -88,20 +91,16 @@ export default function Home() {
                   {results.map((repair, i) => (
                     <tr
                       key={i}
-                      className="text-sm border-t border-gray-300 py-2"
-                    >
+                      className="text-sm border-t border-gray-300 py-2">
                       <td className="px-2">{repair.id}</td>
                       <td className="px-2">{repair.device_name}</td>
                       <td className="px-2">
-                        {new Date(repair.date).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
-                      </td>
+                        {new Date(repair.date).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </td>{" "}
                       <td className="py-2">
                         <StatusBadge status={repair.status} />
                       </td>
