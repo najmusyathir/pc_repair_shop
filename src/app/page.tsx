@@ -123,6 +123,9 @@ export default function Home() {
                           year: "numeric",
                         })}
                       </td>
+
+                      </td>
+
                       <td className="py-2">
                         <StatusBadge status={repair.status} />
                       </td>
