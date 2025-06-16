@@ -6,7 +6,7 @@ import ButtonPri from "@/components/ButtonPri";
 interface RepairProp {
   id: number;
   device_name: string;
-  date: string;
+  request_date: string;
   status: string;
   cust_name: string;
   cust_phone: string;
@@ -39,7 +39,7 @@ export default function PopupInvoice({ repair, onClose }: PopupInvoiceProps) {
               </p>
               <p>
                 <strong>Date:</strong>{" "}
-                {new Date(repair.date).toLocaleDateString()}
+                {new Date(repair.request_date).toLocaleDateString()}
               </p>
             </div>
             <div className="text-right">
