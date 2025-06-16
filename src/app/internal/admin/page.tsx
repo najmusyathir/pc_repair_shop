@@ -79,6 +79,7 @@ export default function Dashboard() {
                   <th className="py-2 pr-4">Issue</th>
                   <th className="py-2 pr-4">Status</th>
                   <th className="py-2">Technician</th>
+                  <th className="py-2">Price (RM)</th>
                 </tr>
               </thead>
               <tbody className="text-sm text-gray-700">
@@ -95,6 +96,7 @@ export default function Dashboard() {
                       <StatusBadge status={repair.status} />
                     </td>
                     <td>{repair.technician_name}</td>
+                    <td>{repair.price}</td>
                   </tr>
                 ))}
               </tbody>

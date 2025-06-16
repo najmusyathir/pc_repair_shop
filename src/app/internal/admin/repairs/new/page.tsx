@@ -48,12 +48,6 @@ export default function NewReportForm() {
             required
           />
           <Input
-            label="Technician ID"
-            name="technician_id"
-            value={form.technician_id ?? ""} 
-            onChange={handleChange}
-          />
-          <Input
             label="Request Date"
             name="request_date"
             type="date"
@@ -61,19 +55,26 @@ export default function NewReportForm() {
             onChange={handleChange}
             required
           />
-          <Input
-            label="Return Date"
-            name="return_date"
-            type="date"
-            value={form.return_date}
-            onChange={handleChange}
-          />
           <Select
             label="Status"
             name="status"
             value={form.status}
             onChange={handleChange}
             options={["Available", "Repairing", "Completed", "Pending"]}
+          />
+          <Input
+            label="Price"
+            name="price"
+            value={form.price ?? ""}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            label="Warranty"
+            name="warranty"
+            value={form.warranty ?? ""}
+            onChange={handleChange}
+            required
           />
           <div className="md:col-span-2">
             <Textarea

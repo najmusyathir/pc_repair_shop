@@ -11,6 +11,7 @@ type RepairFormData = {
   return_date: string;
   status: string;
   warranty: number | null;
+  price: number | null;
 };
 
 const defaultForm: RepairFormData = {
@@ -23,6 +24,7 @@ const defaultForm: RepairFormData = {
   return_date: "",
   status: "Pending",
   warranty: null,
+  price: null,
 };
 
 export const useRepairForm = () => {
@@ -53,6 +55,7 @@ export const useRepairForm = () => {
           return_date: data.return_date || "",
           status: data.status || "Pending",
           warranty: data.warranty ?? null,
+          price: data.price ?? null,
         });
       })
       .catch((err) => {
@@ -71,7 +74,7 @@ export const useRepairForm = () => {
 
     setForm((prev) => ({
       ...prev,
-      [name]: ["technician_id", "warranty"].includes(name)
+      [name]: ["technician_id"].includes(name)
         ? value === "" ? null : Number(value)
         : value,
     }));
@@ -84,7 +87,6 @@ export const useRepairForm = () => {
     const payload = {
       ...form,
       technician_id: form.technician_id ?? null,
-      warranty: form.warranty ?? null,
     };
 
     try {

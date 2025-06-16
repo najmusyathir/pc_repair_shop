@@ -7,6 +7,7 @@ type RepairFilter = {
   status?: string[];
   technician_id?: number;
   technician_name?: string; 
+  price?: number;
 };
 
 export const useRepairs = (filters?: RepairFilter) => {

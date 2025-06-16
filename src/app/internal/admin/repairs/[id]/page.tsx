@@ -47,45 +47,37 @@ export default function EditReportPage() {
           <Input
             label="Device Name"
             name="device_name"
-            value={form.device_name ?? ""}
+            value={form.device_name}
             onChange={handleChange}
             required
           />{" "}
           <Input
             label="Customer Name"
             name="cust_name"
-            value={form.cust_name ?? ""}
+            value={form.cust_name}
             onChange={handleChange}
             required
           />
           <Input
             label="Customer Phone"
             name="cust_phone"
-            value={form.cust_phone ?? ""}
+            value={form.cust_phone}
             onChange={handleChange}
             required
           />
           <Input
-            label="Technician ID"
-            name="technician_id"
-            value={form.technician_id ?? ""}
+            label="Price"
+            name="price"
+            value={form.price ?? ""}
             onChange={handleChange}
             required
           />
           <Input
-            label="Request Date"
-            name="request_date"
-            type="date"
-            value={form.request_date ?? ""}
+            label="Warranty"
+            name="warranty"
+            value={form.warranty ?? ""}
             onChange={handleChange}
             required
-          />
-          <Input
-            label="Return Date"
-            name="return_date"
-            type="date"
-            value={form.return_date ?? ""}
-            onChange={handleChange}
           />
           <Select
             label="Status"
