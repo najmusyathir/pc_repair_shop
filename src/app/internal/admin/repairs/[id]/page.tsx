@@ -82,7 +82,7 @@ export default function EditReportPage() {
           <Select
             label="Status"
             name="status"
-            value={form.status}
+            value={form.status ?? ""}
             onChange={handleChange}
             options={["Pending", "Completed", "Repairing", "Available"]}
           />
