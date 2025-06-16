@@ -32,7 +32,9 @@ export default async function Sidebar() {
     redirect("/");
   }
 
-  const links = navItems[role.toLowerCase() as keyof typeof navItems];
+  role = role.toLowerCase()
+
+  const links = navItems[role as keyof typeof navItems];
   if (!links) redirect("/");
 
   return (
