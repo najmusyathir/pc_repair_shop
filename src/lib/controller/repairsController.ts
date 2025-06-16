@@ -39,17 +39,18 @@ export const createNewRepair = async (data: any) => {
     return_date,
     status,
     warranty,
+    price,
   } = data;
 
-  if (!device_name || !cust_name || !cust_phone || !request_date) {
+  if (!device_name || !cust_name || !cust_phone || !request_date || !price) {
     throw new Error("Missing required fields");
   }
 
   const result = await pool.query(
     `INSERT INTO repairs 
-    (device_name, cust_name, cust_phone, technician_id, description, request_date, return_date, status, warranty)
+    (device_name, cust_name, cust_phone, technician_id, description, request_date, return_date, status, warranty, price)
     VALUES 
-    ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     RETURNING id`,
     [
       device_name,
@@ -60,7 +61,8 @@ export const createNewRepair = async (data: any) => {
       request_date,
       return_date || null,
       status || "Pending",
-      warranty || null,
+      warranty,
+      price,
     ]
   );
 
@@ -73,12 +75,10 @@ export const updateRepairById = async (id: string | string[], data: any) => {
     device_name,
     cust_name,
     cust_phone,
-    technician_id,
     description,
-    request_date,
-    return_date,
     status,
     warranty,
+    price,
   } = data;
 
   return await pool.query(
@@ -86,23 +86,19 @@ export const updateRepairById = async (id: string | string[], data: any) => {
      SET device_name = $1,
          cust_name = $2,
          cust_phone = $3,
-         technician_id = $4,
-         description = $5,
-         request_date = $6,
-         return_date = $7,
-         status = $8,
-         warranty = $9
-     WHERE id = $10`,
+         description = $4,
+         status = $5,
+         warranty = $6,
+         price = $7
+     WHERE id = $8`,
     [
       device_name,
       cust_name,
       cust_phone,
-      technician_id,
       description,
-      request_date,
-      return_date,
       status,
       warranty,
+      price,
       id,
     ]
   );

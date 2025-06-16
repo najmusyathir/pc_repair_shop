@@ -6,12 +6,13 @@ export type Repair = {
   cust_name: string;
   cust_phone: string;
   technician_id: number;
-  technician_name?: string; 
+  technician_name?: string;
   description: string;
   request_date: string;
   return_date: string | null;
   status: string;
   warranty: number | null;
+  price: number;
 };
 
 type RepairFilters = {
@@ -33,7 +34,7 @@ export async function fetchRepairs(filters?: RepairFilters): Promise<Repair[]> {
   }
 
   if (filters?.technicianName) {
-    queryParams.append("techname", filters.technicianName); 
+    queryParams.append("techname", filters.technicianName);
   }
 
   const res = await fetch(`/api/repairs?${queryParams.toString()}`);

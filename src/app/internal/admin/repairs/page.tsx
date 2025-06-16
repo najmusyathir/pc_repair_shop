@@ -35,7 +35,8 @@ export default function RepairsPage() {
                   <th className="py-2 pr-4">Issue</th>
                   <th className="py-2 pr-4">Status</th>
                   <th className="py-2">Technician</th>
-                  <th className="py-2">Action</th>
+                  <th className="py-2">Price (RM) </th>
+                  <th className="py-2">Warranty </th>
                 </tr>
               </thead>
               <tbody className="text-sm text-gray-700">
@@ -52,6 +53,8 @@ export default function RepairsPage() {
                       <StatusBadge status={repair.status} />
                     </td>
                     <td>{repair.technician_name}</td>
+                    <td className="pr-4">{repair.price}</td>
+                    <td className="pr-4">{repair.warranty}</td>
                     <td className="py-2">
                       <div className="flex gap-2">
                         <Link href={`/internal/admin/repairs/${repair.id}`}>
