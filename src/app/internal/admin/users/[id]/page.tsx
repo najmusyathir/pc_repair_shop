@@ -79,7 +79,7 @@ export default function EditUserPage() {
             name="role"
             value={form.role}
             onChange={handleChange}
-            options={["admin", "technician"]}
+            options={["Admin", "Technician"]}
           />
           <div className="md:col-span-2 flex justify-end">
             <button

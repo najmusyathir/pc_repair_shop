@@ -29,7 +29,7 @@ export const useLogin = () => {
       }
 
       const { role } = await res.json();
-      router.push(`/internal/${role}`);
+      router.push(`/internal/${role.toLowerCase()}`);
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("An unexpected error occurred");

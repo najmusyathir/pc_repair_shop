@@ -74,7 +74,6 @@ export default function NewReportForm() {
             name="warranty"
             value={form.warranty ?? ""}
             onChange={handleChange}
-            required
           />
           <div className="md:col-span-2">
             <Textarea

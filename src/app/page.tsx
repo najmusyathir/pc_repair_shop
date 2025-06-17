@@ -10,7 +10,7 @@ import Image from "next/image";
 interface RepairRecord {
   id: number;
   device_name: string;
-  date: string;
+  request_date: string;
   status: string;
   cust_name: string;
   cust_phone: string;
@@ -37,7 +37,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-6 py-20">
         <header className="mb-20 text-center">
           <div className="w-full flex justify-center">
-          <Image src="/logo.png" alt="logo" width={400} height={120} />
+            <Image src="/logo.png" alt="logo" width={400} height={120} />
           </div>
 
           <p className="text-lg text-gray-600">
@@ -110,16 +110,16 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {(results as RepairRecord[]).map((repair, i) => (
+                  {(results as unknown as RepairRecord[]).map((repair, i) => (
                     <tr
                       key={i}
                       className="text-sm border-t border-gray-300 py-2">
                       <td className="px-2">{repair.id}</td>
                       <td className="px-2">{repair.device_name}</td>
                       <td className="px-2">
-                        {new Date(repair.date).toLocaleDateString("en-GB", {
-                          day: "numeric",
-                          month: "long",
+                        {new Date(repair.request_date).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
                           year: "numeric",
                         })}
                       </td>

@@ -77,7 +77,6 @@ export default function EditReportPage() {
             name="warranty"
             value={form.warranty ?? ""}
             onChange={handleChange}
-            required
           />
           <Select
             label="Status"
